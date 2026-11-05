@@ -180,3 +180,9 @@ Live receipts on Vultr Cloud Compute (https://66-135-26-143.sslip.io/), Theseus 
 - expressjs/express (r-express-v023-6c-110420262256): 402 of 402 verdicts matched the prior run. 354 load-bearing, 48 not needed, 0 proven bloat. Quiet limit 15 s. 0 reruns. Seven end labels moved to "failed, summary never printed"; all stayed LOAD-BEARING.
 
 Install and run: see Commands and Deploy on Vultr above. MIT License (see LICENSE). Credit line: Made by Trey with Grok. Copyright (c) 2026 [@Nefarious_Trey on X](https://x.com/Nefarious_Trey). No telemetry. Lawful use terms are in the Lawful use section above.
+
+## Vultr services used (Nov 5, 2026, appended)
+- Vultr Cloud Compute: one VM runs the backend and the web app. Caddy serves HTTPS and passes requests to the Theseus app. All scans run on this VM with parallel workers.
+- Vultr Serverless Inference: every agent LLM call (plan, explain, brief) goes to https://api.vultrinference.com/v1. No other LLM provider is used.
+- Sandbox: each cut-and-test run happens inside bwrap. It gives each run its own network, process, IPC and user namespaces, an empty environment with no keys, a read-only system, and time and memory caps. We chose bwrap because it gives the same kind of isolation as a container without a root daemon running on the host.
+- Docker: a Docker sandbox option is a possible future addition. It is not needed to run Theseus today.

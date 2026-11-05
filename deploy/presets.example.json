@@ -1,0 +1,11 @@
+{
+  "express": {
+    "name": "Express 5 (expressjs/express, MIT): the big demo target",
+    "path": "/var/lib/theseus/targets/express",
+    "oracle": "/var/lib/theseus/targets/express.oracle.json",
+    "credit": "Express (https://github.com/expressjs/express), MIT License, Copyright (c) 2009-2014 TJ Holowaychuk, (c) 2013-2014 Roman Shtylman, (c) 2014-2015 Douglas Christopher Wilson.",
+    "admin": true,
+    "minutes": 240,
+    "workers": 2
+  }
+}

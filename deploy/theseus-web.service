@@ -1,0 +1,25 @@
+# Theseus. Copyright (c) 2026 @Nefarious_Trey on X. MIT License. Made by Trey with Grok.
+[Unit]
+Description=Theseus web app (blast radius map + Approve)
+After=network-online.target user@@UID@.service
+Wants=network-online.target user@@UID@.service
+
+[Service]
+User=theseus
+Group=theseus
+WorkingDirectory=/opt/theseus
+EnvironmentFile=/etc/theseus/env
+Environment=THESEUS_DATA=/var/lib/theseus THESEUS_TRUST_PROXY=1 XDG_RUNTIME_DIR=/run/user/@UID@ DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/@UID@/bus PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /opt/theseus/web/server.py --host 127.0.0.1 --port 8080
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+ProtectSystem=full
+ProtectKernelModules=yes
+# no ProtectKernelLogs: it masks /proc/kmsg, and bwrap can't mount a fresh /proc for the lockbox then
+ProtectControlGroups=no
+LimitNOFILE=8192
+MemoryHigh=80%
+
+[Install]
+WantedBy=multi-user.target

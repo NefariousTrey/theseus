@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theseus: blast radius that leaves only what's load-bearing</title>
+<meta name="description" content="Theseus cuts one part at a time from a sandboxed copy of your project, runs your tests, and maps what is load-bearing. Nothing is deleted without your Approve.">
+<link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/app.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="/static/logo.svg" alt="" width="34" height="34">
+    <div><h1>Theseus</h1><p class="tag">Blast radius that leaves only what's load-bearing.</p></div></div>
+  <nav class="chips">
+    <span class="chip">Vultr Cloud Compute</span>
+    <span class="chip" id="agentChip">Vultr Serverless Inference</span>
+    <span class="chip">bwrap lockbox</span>
+    <button class="link" id="adminBtn" type="button">Admin</button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <p>Theseus copies your project, cuts <b>one part at a time</b> from the copy, runs your tests inside a locked sandbox, and records what broke.
+      The tests decide every verdict. An AI agent on Vultr Serverless Inference picks the cut order and explains each break in plain words.
+      <b>Your original is never written.</b> Approve only exports a new, trimmed copy and re-runs the tests on it.</p>
+  </section>
+
+  <div class="grid">
+    <aside class="panel" aria-label="Controls">
+      <h2>Run a scan</h2>
+      <label for="target">Target</label>
+      <select id="target"></select>
+      <div id="repoRow" class="hidden">
+        <label for="repo">Or a public GitHub repo (admin)</label>
+        <input id="repo" type="url" placeholder="https://github.com/owner/repo" autocomplete="off" spellcheck="false">
+      </div>
+      <label class="check"><input type="checkbox" id="agent"> Use the agent (plans the order, explains breaks). Off by default.</label>
+      <p class="hint">When on, part names and paths, short code snippets of broken parts (up to 40 lines each) and error lines are sent to Vultr Serverless Inference. Secret-looking strings are scrubbed first. Verdicts always come from the tests.</p>
+      <button id="runBtn" class="primary" type="button">Run scan</button>
+      <p class="hint" id="runNote"></p>
+
+      <h2>Containment demo</h2>
+      <p class="hint">A hostile dependency tries to phone home, write to your home folder, read your API key, fork-bomb and eat memory. Watch it fail.</p>
+      <button id="containBtn" type="button">Run containment demo</button>
+
+      <h2>Runs and receipts</h2>
+      <ul id="runs" class="runs"></ul>
+    </aside>
+
+    <section class="work">
+      <div class="panel" id="statusPanel">
+        <div class="row between"><h2 id="runTitle">Pick a receipt or run a scan</h2><span id="runStatus" class="badge"></span></div>
+        <div class="bar"><div id="barFill"></div></div>
+        <div class="stats" id="stats"></div>
+        <p class="hint" id="planLine"></p>
+        <div id="brief" class="brief hidden"></div>
+        <div id="warnings"></div>
+      </div>
+
+      <div class="panel">
+        <div class="row between"><h2>Blast radius map</h2>
+          <div class="legend">
+            <span class="k lb">load-bearing</span><span class="k bloat">proven bloat</span>
+            <span class="k untested">untested: human call</span><span class="k test">test</span><span class="k hung">timed out</span>
+          </div></div>
+        <div id="map" class="map"><p class="hint">The map fills in live as each cut finishes.</p></div>
+      </div>
+
+      <div class="two">
+        <div class="panel" id="detail"><h2>Part detail</h2><p class="hint">Click any tile.</p></div>
+        <div class="panel" id="approvePanel"><h2>Approve</h2>
+          <p class="hint">Nothing is deleted. Approve writes a <b>new trimmed copy</b> without the parts below, re-runs your tests on it in the lockbox, and gives you a download.</p>
+          <div id="approveList"></div>
+          <div class="row"><label class="check"><input type="radio" name="scope" value="bloat" checked> proven bloat only</label>
+            <label class="check"><input type="radio" name="scope" value="all"> also untested code (human call)</label></div>
+          <button id="approveBtn" class="primary" type="button" disabled>Approve: export trimmed copy</button>
+          <pre id="approveOut" class="out hidden"></pre>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="containPanel"><h2>Containment</h2><div id="containOut"></div></div>
+      <div class="panel"><h2>Live feed</h2><ol id="feed" class="feed"></ol></div>
+    </section>
+  </div>
+</main>
+
+<dialog id="adminDlg">
+  <form method="dialog" id="adminForm">
+    <h2>Admin</h2>
+    <p class="hint">Unlocks the big targets. The token is checked on the server; it is never stored in this page.</p>
+    <input id="token" type="password" autocomplete="current-password" placeholder="admin token">
+    <div class="row"><button class="primary" id="loginBtn" type="submit">Unlock</button><button type="button" id="logoutBtn">Lock</button><button type="button" id="closeDlg">Close</button></div>
+    <p class="hint" id="adminMsg"></p>
+  </form>
+</dialog>
+
+<footer>
+  <p><b>Made by Trey with Grok.</b> Copyright (c) 2026 <a href="https://x.com/Nefarious_Trey" rel="noopener noreferrer" target="_blank">@Nefarious_Trey on X</a>. MIT License. No telemetry.</p>
+  <p class="small">Demo target credit: Express (https://github.com/expressjs/express), MIT License, Copyright (c) 2009-2014 TJ Holowaychuk, (c) 2013-2014 Roman Shtylman, (c) 2014-2015 Douglas Christopher Wilson. Express is scanned, not bundled; its LICENSE is kept. compression (https://github.com/expressjs/compression), MIT License, Copyright (c) its authors, is scanned, not bundled. Q and co are MIT and credited in their reports.</p>
+  <div class="legal small">
+    <p><b>Acceptable Use.</b> This software may be used only for lawful purposes. You may not use it to harm, harass, defraud, deceive or exploit any person, or to infringe any person's rights, including rights to equal treatment, privacy and personal autonomy.</p>
+    <p><b>Disclaimer of Warranty.</b> This software is provided "AS IS", without warranty of any kind, express or implied, including warranties of merchantability, fitness for a particular purpose and non-infringement. The authors developed it with reasonable care and due diligence and welcome feedback.</p>
+    <p><b>Limitation of Liability.</b> In no event shall the authors be liable for any claim, damages or other liability arising from the use or misuse of this software, including any use that violates law or these terms.</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+scan-*/
+recheck-*/
+copies/
+*.bak*
+VULTR_LEDGER.md*

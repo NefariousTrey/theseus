@@ -1,0 +1,11 @@
+{
+  "name": "orderflow",
+  "version": "2.3.0",
+  "description": "Demo target for Theseus: a tiny order pricing pipeline with real, provable bloat.",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "node --test --test-reporter=tap"
+  }
+}

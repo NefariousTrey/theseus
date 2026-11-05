@@ -1,0 +1,8 @@
+{
+  "name": "containment-demo",
+  "version": "1.0.0",
+  "description": "Demo target for Theseus: a project with a hostile dependency. The lockbox must hold.",
+  "license": "MIT",
+  "private": true,
+  "scripts": { "test": "node --test --test-reporter=tap" }
+}
